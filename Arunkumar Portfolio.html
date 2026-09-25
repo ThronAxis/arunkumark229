@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f7fb" />
+  <meta name="description" content="Arun Kumar K — AI Systems Engineering portfolio covering ML compilers, inference optimization, GPU computing, runtime systems and performance engineering." />
+  <title>Arun Kumar K — AI Systems Engineering</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --bg-2: #eef2f8;
+      --ink: #0b1220;
+      --muted: #5c6678;
+      --soft: rgba(255,255,255,.56);
+      --soft-strong: rgba(255,255,255,.78);
+      --line: rgba(74, 92, 124, .16);
+      --accent: #5f7cff;
+      --accent-2: #6fcbff;
+      --accent-3: #a27bff;
+      --shadow: 0 24px 70px rgba(69, 88, 122, .12);
+      --shadow-2: 0 14px 38px rgba(69, 88, 122, .13);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1220px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(111,203,255,.24), transparent 28%),
+        radial-gradient(circle at 90% 6%, rgba(162,123,255,.18), transparent 26%),
+        linear-gradient(180deg, #f8faff 0%, var(--bg) 48%, var(--bg-2) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .noise {
+      position: fixed; inset: 0; z-index: -2; pointer-events: none; opacity: .035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+    }
+
+    .orb {
+      position: fixed; border-radius: 50%; filter: blur(10px); pointer-events: none; z-index: -1;
+      mix-blend-mode: multiply; opacity: .58; will-change: transform;
+    }
+    .orb.one { width: 260px; height: 260px; left: -90px; top: 22vh; background: radial-gradient(circle at 35% 35%, rgba(95,124,255,.52), rgba(95,124,255,0)); }
+    .orb.two { width: 340px; height: 340px; right: -120px; top: 36vh; background: radial-gradient(circle at 40% 40%, rgba(162,123,255,.45), rgba(162,123,255,0)); }
+    .orb.three { width: 210px; height: 210px; left: 55%; bottom: -80px; background: radial-gradient(circle at 40% 40%, rgba(111,203,255,.42), rgba(111,203,255,0)); }
+
+    .wrap { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+
+    .glass {
+      background: linear-gradient(145deg, rgba(255,255,255,.68), rgba(255,255,255,.39));
+      border: 1px solid rgba(255,255,255,.82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px) saturate(135%);
+      -webkit-backdrop-filter: blur(18px) saturate(135%);
+    }
+
+    header.navbar {
+      position: fixed; top: 16px; left: 0; right: 0; z-index: 50;
+    }
+    .nav-inner {
+      width: min(var(--max), calc(100% - 40px)); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      padding: 12px 14px 12px 18px; border-radius: 999px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+      background: conic-gradient(from 200deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
+      color: white; font-weight: 800; box-shadow: 0 8px 22px rgba(95,124,255,.28);
+      transform: rotate(-10deg);
+    }
+    .brand-name { font-weight: 800; letter-spacing: -.03em; white-space: nowrap; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
+    .nav-links a { padding: 9px 12px; border-radius: 999px; color: var(--muted); font-size: 14px; font-weight: 650; transition: .25s ease; }
+    .nav-links a:hover { background: rgba(255,255,255,.56); color: var(--ink); transform: translateY(-1px); }
+    .nav-cta { padding: 10px 14px; border-radius: 999px; font-weight: 750; font-size: 14px; background: rgba(10,16,32,.94); color: white; box-shadow: 0 10px 24px rgba(11,18,32,.12); }
+
+    main { padding-top: 110px; }
+    section { scroll-margin-top: 110px; }
+
+    .hero { min-height: calc(100vh - 110px); display: grid; align-items: center; padding: 70px 0 90px; position: relative; }
+    .hero-grid { display: grid; grid-template-columns: 1.08fr .92fr; gap: 56px; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 9px 13px; border-radius: 999px; color: #42506a; background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.82); box-shadow: 0 10px 30px rgba(69,88,122,.06); font-size: 13px; font-weight: 750; }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 0 6px rgba(95,124,255,.09); }
+    h1 { margin: 22px 0 18px; font-size: clamp(46px, 6vw, 86px); line-height: .96; letter-spacing: -.065em; max-width: 840px; }
+    .gradient-text { background: linear-gradient(110deg, #0a1120 5%, #4566ea 47%, #8f69e9 85%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero-copy { margin: 0; max-width: 760px; color: var(--muted); font-size: clamp(17px, 1.6vw, 20px); line-height: 1.7; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 13px 17px; border-radius: 999px; font-weight: 760; border: 1px solid transparent; transition: transform .25s ease, box-shadow .25s ease, background .25s ease; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn.primary { background: #0b1220; color: #fff; box-shadow: 0 14px 30px rgba(11,18,32,.15); }
+    .btn.ghost { background: rgba(255,255,255,.55); border-color: rgba(255,255,255,.82); color: #1b2740; box-shadow: var(--shadow-2); }
+
+    .hero-note { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+    .mini-pill { padding: 9px 12px; border-radius: 999px; background: rgba(255,255,255,.45); border: 1px solid rgba(255,255,255,.72); color: #566276; font-size: 12px; font-weight: 700; }
+
+    .hero-visual { position: relative; min-height: 520px; perspective: 1400px; display: grid; place-items: center; }
+    .scene { position: relative; width: min(460px, 88vw); aspect-ratio: 1; transform-style: preserve-3d; animation: float 8s ease-in-out infinite; }
+    .scene-core {
+      position: absolute; inset: 17%; border-radius: 32%; transform: translateZ(70px) rotateX(9deg) rotateZ(-8deg);
+      background: linear-gradient(135deg, rgba(255,255,255,.88), rgba(255,255,255,.44));
+      border: 1px solid rgba(255,255,255,.92); box-shadow: 0 30px 100px rgba(76,96,147,.16), inset 0 1px 1px rgba(255,255,255,.9);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); overflow: hidden;
+    }
+    .scene-core::before { content: ""; position: absolute; width: 150%; height: 50%; left: -22%; top: -10%; background: radial-gradient(circle at 50% 60%, rgba(111,203,255,.4), transparent 58%); transform: rotate(-18deg); }
+    .scene-core::after { content: ""; position: absolute; width: 130%; height: 60%; right: -40%; bottom: -25%; background: radial-gradient(circle at 40% 40%, rgba(162,123,255,.28), transparent 60%); }
+    .ring { position: absolute; border: 1px solid rgba(95,124,255,.28); border-radius: 50%; transform-style: preserve-3d; }
+    .ring.r1 { inset: 4%; transform: rotateX(66deg) rotateZ(15deg); animation: spin1 18s linear infinite; }
+    .ring.r2 { inset: 14%; transform: rotateY(66deg) rotateZ(-11deg); animation: spin2 15s linear infinite reverse; border-color: rgba(162,123,255,.3); }
+    .ring.r3 { inset: 23%; transform: rotateX(54deg) rotateY(12deg); animation: spin3 13s linear infinite; border-color: rgba(111,203,255,.34); }
+    .node { position: absolute; width: 15px; height: 15px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-2), var(--accent)); box-shadow: 0 0 30px rgba(95,124,255,.38); transform: translateZ(85px); }
+    .node.n1 { top: 10%; left: 64%; animation: bob 4s ease-in-out infinite; }
+    .node.n2 { bottom: 14%; left: 17%; transform: translateZ(105px); animation: bob 5.4s ease-in-out infinite .5s; }
+    .node.n3 { top: 36%; right: 7%; transform: translateZ(120px); animation: bob 4.8s ease-in-out infinite 1s; }
+    .hero-profile {
+      position: absolute; width: 112px; height: 112px; right: 8%; top: 10%; z-index: 5;
+      border-radius: 50%; padding: 5px;
+      background: linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,255,255,.38));
+      border: 1px solid rgba(255,255,255,.92);
+      box-shadow: 0 22px 48px rgba(69,88,122,.16), 0 0 0 1px rgba(95,124,255,.06);
+      transform: translateZ(135px) rotate(6deg);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      animation: portraitFloat 6s ease-in-out infinite;
+    }
+    .hero-profile img { width: 100%; height: 100%; display:block; object-fit:cover; border-radius:50%; }
+    .hero-profile::after {
+      content:"AI Systems"; position:absolute; left:-22px; bottom:-13px;
+      padding:7px 10px; border-radius:999px; background:rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.86); color:#59677d; font-size:10px; font-weight:800;
+      letter-spacing:.08em; box-shadow:0 10px 24px rgba(69,88,122,.1);
+    }
+    @keyframes portraitFloat { 0%,100% { transform:translateZ(135px) rotate(6deg) translateY(0); } 50% { transform:translateZ(150px) rotate(2deg) translateY(-8px); } }
+    .core-label { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; padding: 40px; z-index: 2; }
+    .core-label small { color: #61708a; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .18em; }
+    .core-label strong { margin-top: 8px; font-size: clamp(36px, 5vw, 56px); letter-spacing: -.06em; }
+    .core-label span { margin-top: 10px; color: #5f6d81; font-size: 14px; line-height: 1.5; }
+
+    @keyframes float { 0%,100% { transform: rotateX(1deg) rotateY(-1deg) translateY(0); } 50% { transform: rotateX(-3deg) rotateY(5deg) translateY(-13px); } }
+    @keyframes spin1 { to { transform: rotateX(66deg) rotateZ(375deg); } }
+    @keyframes spin2 { to { transform: rotateY(66deg) rotateZ(-371deg); } }
+    @keyframes spin3 { to { transform: rotateX(54deg) rotateY(12deg) rotateZ(360deg); } }
+    @keyframes bob { 0%,100% { translate: 0 0; } 50% { translate: 4px -14px; } }
+
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 24px; }
+    .section-kicker { color: #6880d6; font-size: 12px; text-transform: uppercase; letter-spacing: .18em; font-weight: 800; }
+    h2 { margin: 7px 0 0; font-size: clamp(30px, 4vw, 46px); letter-spacing: -.05em; line-height: 1; }
+    .section-intro { max-width: 600px; color: var(--muted); line-height: 1.7; margin: 0; }
+
+    .about-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 20px; }
+    .profile-card { padding: 28px; border-radius: var(--radius-xl); position: relative; overflow: hidden; }
+    .profile-top { display: flex; align-items: center; gap: 16px; }
+    .avatar { width: 86px; height: 86px; border-radius: 50%; object-fit: cover; display: block; background: linear-gradient(135deg, #d9e2ff, #e8f8ff 48%, #efe3ff); border: 1px solid rgba(255,255,255,.9); box-shadow: 0 14px 32px rgba(69,88,122,.12); }
+    .avatar-fallback { display:grid; place-items:center; color:#5a6a82; font-weight:850; font-size:25px; }
+    .profile-name { font-size: 21px; font-weight: 820; letter-spacing: -.035em; }
+    .profile-role { color: var(--muted); margin-top: 5px; font-size: 13px; line-height: 1.45; }
+    .profile-summary { margin: 25px 0 0; color: var(--muted); line-height: 1.75; }
+    .profile-links { display:flex; flex-wrap:wrap; gap:9px; margin-top:24px; }
+    .social-chip { display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:999px; background:rgba(255,255,255,.5); border:1px solid rgba(255,255,255,.82); font-size:12px; font-weight:750; color:#3d4960; }
+    .social-chip:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(69,88,122,.08); }
+    .facts { padding: 20px; border-radius: var(--radius-xl); display:grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .fact { padding: 20px; border-radius: 20px; background: rgba(255,255,255,.42); border:1px solid rgba(255,255,255,.78); }
+    .fact-label { color:#718098; font-size:12px; font-weight:700; }
+    .fact-value { margin-top:7px; font-size:16px; font-weight:780; letter-spacing:-.02em; }
+
+    .projects { padding: 96px 0; }
+    .filters { display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; }
+    .filter-btn { border:1px solid rgba(255,255,255,.82); background:rgba(255,255,255,.46); color:#566276; padding:9px 12px; border-radius:999px; font-size:12px; font-weight:760; }
+    .filter-btn.active, .filter-btn:hover { background:#0b1220; color:#fff; border-color:#0b1220; }
+    .project-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; }
+    .project-card { position:relative; padding:24px; border-radius:26px; min-height: 320px; display:flex; flex-direction:column; overflow:hidden; transition: transform .3s ease, box-shadow .3s ease; transform-style:preserve-3d; }
+    .project-card::before { content:""; position:absolute; width:180px; height:180px; border-radius:50%; right:-90px; top:-90px; background: radial-gradient(circle, rgba(111,203,255,.21), transparent 68%); transition:.35s ease; }
+    .project-card:hover { transform: translateY(-7px) rotateX(.5deg); box-shadow: 0 30px 90px rgba(69,88,122,.16); }
+    .project-card:hover::before { transform: scale(1.35); }
+    .project-top { display:flex; justify-content:space-between; gap:12px; align-items:start; position:relative; z-index:1; }
+    .project-index { font-size:11px; color:#8290a5; font-weight:800; letter-spacing:.12em; }
+    .project-status { font-size:10px; font-weight:850; text-transform:uppercase; letter-spacing:.13em; padding:7px 9px; border-radius:999px; background:rgba(255,255,255,.54); color:#53617a; border:1px solid rgba(255,255,255,.8); }
+    .project-title { font-size:24px; letter-spacing:-.045em; margin:20px 0 8px; position:relative; z-index:1; }
+    .project-tagline { color:#5d6a7e; line-height:1.58; font-size:14px; position:relative; z-index:1; }
+    .project-stack { display:flex; flex-wrap:wrap; gap:7px; margin-top:17px; position:relative; z-index:1; }
+    .tag { padding:6px 8px; border-radius:8px; background:rgba(255,255,255,.48); border:1px solid rgba(255,255,255,.74); color:#66738a; font-size:10px; font-weight:760; }
+    .project-focus { margin-top:auto; padding-top:18px; color:#38455b; font-size:12px; line-height:1.65; position:relative; z-index:1; }
+
+    .flagship { margin-bottom: 18px; padding: 28px; border-radius:30px; display:grid; grid-template-columns: 1.05fr .95fr; gap:20px; align-items:stretch; }
+    .flagship-left { display:flex; flex-direction:column; justify-content:center; }
+    .flagship-badge { display:inline-flex; width:max-content; padding:7px 10px; border-radius:999px; color:#445fcf; background:rgba(95,124,255,.09); border:1px solid rgba(95,124,255,.14); font-size:11px; font-weight:850; text-transform:uppercase; letter-spacing:.12em; }
+    .flagship h3 { font-size:40px; line-height:1; letter-spacing:-.055em; margin:16px 0 12px; }
+    .flagship p { margin:0; color:var(--muted); line-height:1.75; max-width:720px; }
+    .architecture { position:relative; min-height:300px; padding:22px; border-radius:24px; background:linear-gradient(145deg, rgba(246,249,255,.82), rgba(255,255,255,.38)); border:1px solid rgba(255,255,255,.9); overflow:hidden; display:grid; place-items:center; }
+    .architecture::before { content:""; position:absolute; inset:0; background: radial-gradient(circle at 25% 20%, rgba(95,124,255,.18), transparent 35%), radial-gradient(circle at 80% 70%, rgba(162,123,255,.16), transparent 34%); }
+    .flow { position:relative; z-index:2; width:100%; display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; align-items:center; }
+    .flow-node { padding:14px 8px; border-radius:16px; text-align:center; font-size:11px; line-height:1.35; font-weight:820; color:#38455d; background:rgba(255,255,255,.62); border:1px solid rgba(255,255,255,.85); box-shadow:0 12px 30px rgba(69,88,122,.08); }
+    .flow-arrow { text-align:center; color:#8897ad; font-weight:850; }
+
+    .skills { padding: 30px 0 96px; }
+    .skills-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:15px; }
+    .skill-card { padding:22px; border-radius:24px; min-height:220px; }
+    .skill-icon { width:44px; height:44px; border-radius:16px; display:grid; place-items:center; background:linear-gradient(135deg, rgba(95,124,255,.15), rgba(111,203,255,.16)); color:#4963db; border:1px solid rgba(255,255,255,.8); }
+    .skill-card h3 { margin:18px 0 8px; font-size:17px; letter-spacing:-.025em; }
+    .skill-card p { margin:0; color:var(--muted); font-size:13px; line-height:1.65; }
+
+    .roadmap { padding: 10px 0 100px; }
+    .timeline { position:relative; padding-left:34px; }
+    .timeline::before { content:""; position:absolute; left:10px; top:0; bottom:0; width:1px; background:linear-gradient(180deg, rgba(95,124,255,.5), rgba(162,123,255,.16)); }
+    .timeline-item { position:relative; padding:0 0 22px; }
+    .timeline-dot { position:absolute; left:-30px; top:4px; width:11px; height:11px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-3)); box-shadow:0 0 0 7px rgba(95,124,255,.08); }
+    .timeline-card { padding:20px; border-radius:22px; }
+    .timeline-year { color:#6b7b95; font-size:11px; font-weight:830; text-transform:uppercase; letter-spacing:.13em; }
+    .timeline-title { font-size:18px; font-weight:820; margin-top:7px; }
+    .timeline-copy { margin:7px 0 0; color:var(--muted); line-height:1.7; font-size:13px; }
+
+    .contact { padding: 10px 0 105px; }
+    .contact-card { padding:32px; border-radius:34px; display:grid; grid-template-columns: 1.1fr .9fr; gap:20px; align-items:center; }
+    .contact-title { font-size: clamp(34px, 5vw, 58px); line-height:.98; letter-spacing:-.06em; margin:12px 0 16px; }
+    .contact-copy { color:var(--muted); line-height:1.75; max-width:680px; }
+    .contact-grid { display:grid; gap:9px; }
+    .contact-item { display:flex; align-items:center; gap:12px; padding:15px; border-radius:18px; background:rgba(255,255,255,.48); border:1px solid rgba(255,255,255,.8); }
+    .contact-item .ico { width:38px; height:38px; display:grid; place-items:center; border-radius:14px; background:rgba(95,124,255,.09); color:#4b64d8; flex:0 0 auto; }
+    .contact-item small { display:block; color:#758198; font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    .contact-item strong { display:block; margin-top:3px; font-size:13px; }
+    .edit-note { margin-top:12px; color:#7b879b; font-size:11px; line-height:1.5; }
+
+    footer { padding:0 0 30px; color:#7d889b; font-size:12px; }
+    .footer-inner { display:flex; justify-content:space-between; gap:20px; align-items:center; padding:17px 20px; border-radius:20px; }
+
+    .reveal { opacity:0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+    .reveal.visible { opacity:1; transform:none; }
+
+    .cursor-glow { position:fixed; width:180px; height:180px; border-radius:50%; pointer-events:none; z-index:-1; background:radial-gradient(circle, rgba(111,203,255,.09), rgba(111,203,255,0) 68%); transform:translate(-50%,-50%); opacity:.0; transition:opacity .25s ease; }
+
+    @media (max-width: 1050px) {
+      .hero-grid, .about-grid, .flagship, .contact-card { grid-template-columns: 1fr; }
+      .project-grid { grid-template-columns: repeat(2,1fr); }
+      .skills-grid { grid-template-columns: repeat(2,1fr); }
+      .hero-visual { min-height: 430px; }
+      .filters { justify-content:flex-start; }
+    }
+    @media (max-width: 760px) {
+      .wrap, .nav-inner { width:min(var(--max), calc(100% - 24px)); }
+      .nav-links { display:none; }
+      .nav-cta { padding:9px 12px; font-size:12px; }
+      main { padding-top: 92px; }
+      .hero { padding-top:44px; }
+      h1 { font-size: clamp(42px, 13vw, 66px); }
+      .project-grid, .skills-grid { grid-template-columns: 1fr; }
+      .facts { grid-template-columns: 1fr; }
+      .scene { width:min(380px, 92vw); }
+      .hero-profile { width:92px; height:92px; right:4%; top:8%; }
+      .hero-visual { min-height:370px; }
+      .flow { grid-template-columns:1fr; gap:6px; }
+      .flow-arrow { transform:rotate(90deg); height:10px; }
+      .contact-card, .flagship, .profile-card, .facts { padding:22px; }
+      .footer-inner { flex-direction:column; align-items:flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior:auto; }
+      *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="orb one"></div><div class="orb two"></div><div class="orb three"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <header class="navbar">
+    <div class="nav-inner glass">
+      <a class="brand" href="#top" aria-label="Home">
+        <span class="brand-mark">AK</span>
+        <span class="brand-name">Arun Kumar K</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Stack</a>
+        <a href="#roadmap">Roadmap</a>
+      </nav>
+      <a class="nav-cta" href="#contact">Contact</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="reveal">
+          <span class="eyebrow"><span class="eyebrow-dot"></span> AI Systems Engineering · ML Compilers · Inference</span>
+          <h1>Building the layer between <span class="gradient-text">AI software and silicon.</span></h1>
+          <p class="hero-copy">I’m an M.Tech Computer Science & Engineering student at SRM Institute of Science and Technology, building systems around ML compilers, inference optimization, GPU computing, runtimes, profiling, quantization and hardware-aware execution.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#projects">Explore projects <span>↗</span></a>
+            <a class="btn ghost" href="#contact">Get in touch <span>→</span></a>
+          </div>
+          <div class="hero-note">
+            <span class="mini-pill">C++</span>
+            <span class="mini-pill">CUDA</span>
+            <span class="mini-pill">MLIR / LLVM</span>
+            <span class="mini-pill">LLM Inference</span>
+            <span class="mini-pill">Performance Engineering</span>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal" id="heroVisual">
+          <div class="scene" id="scene3d" aria-hidden="true">
+            <div class="ring r1"></div>
+            <div class="ring r2"></div>
+            <div class="ring r3"></div>
+            <div class="node n1"></div>
+            <div class="node n2"></div>
+            <div class="node n3"></div>
+            <div class="hero-profile" aria-label="Arun Kumar K profile photo">
+              <img id="heroProfileImage" alt="Arun Kumar K" />
+            </div>
+            <div class="scene-core">
+              <div class="core-label">
+                <small>Systems Stack</small>
+                <strong>AI → HW</strong>
+                <span>Compiler · Runtime · Kernel · Accelerator · Measurement</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="wrap" style="padding:18px 0 94px;">
+      <div class="section-head reveal">
+        <div>
+          <div class="section-kicker">01 · Profile</div>
+          <h2>Systems-first, performance-minded.</h2>
+        </div>
+        <p class="section-intro">My work is centered on the infrastructure underneath modern AI: how computation is represented, compiled, scheduled, executed, profiled and optimized across CPUs, GPUs and other accelerators.</p>
+      </div>
+
+      <div class="about-grid">
+        <article class="profile-card glass reveal">
+          <div class="profile-top">
+            <div class="avatar avatar-fallback" id="avatarWrap"><span>AK</span></div>
+            <div>
+              <div class="profile-name">Arun Kumar K</div>
+              <div class="profile-role">M.Tech CSE · SRM Institute of Science and Technology<br>AI Systems · ML Compiler · Inference Optimization</div>
+            </div>
+          </div>
+          <p class="profile-summary">I’m building a focused engineering portfolio around compiler infrastructure, CUDA kernels, LLM inference, quantization, distributed systems and performance tooling. The aim is to connect the model layer all the way down to measurable hardware execution.</p>
+          <div class="profile-links" id="profileLinks">
+            <a class="social-chip" id="githubLink" href="#" target="_blank" rel="noreferrer">GitHub ↗</a>
+            <a class="social-chip" id="linkedinLink" href="#" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            <a class="social-chip" id="xLink" href="#" target="_blank" rel="noreferrer">X ↗</a>
+          </div>
+        </article>
+
+        <div class="facts glass reveal">
+          <div class="fact"><div class="fact-label">Academic track</div><div class="fact-value">M.Tech CSE · 2026–2028</div></div>
+          <div class="fact"><div class="fact-label">Core focus</div><div class="fact-value">AI Performance Engineering</div></div>
+          <div class="fact"><div class="fact-label">Compiler layer</div><div class="fact-value">MLIR · LLVM · Lowering</div></div>
+          <div class="fact"><div class="fact-label">Accelerator layer</div><div class="fact-value">CUDA · GPU Architecture</div></div>
+          <div class="fact"><div class="fact-label">Inference layer</div><div class="fact-value">KV Cache · Quantization</div></div>
+          <div class="fact"><div class="fact-label">Engineering mindset</div><div class="fact-value">Benchmark → Profile → Optimize</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="projects">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-kicker">02 · Selected work</div>
+            <h2>Projects across the AI systems stack.</h2>
+          </div>
+          <div class="filters" role="group" aria-label="Project filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="compiler">Compiler</button>
+            <button class="filter-btn" data-filter="gpu">GPU</button>
+            <button class="filter-btn" data-filter="inference">Inference</button>
+            <button class="filter-btn" data-filter="distributed">Distributed</button>
+            <button class="filter-btn" data-filter="deployment">Deployment</button>
+          </div>
+        </div>
+
+        <article class="flagship glass reveal" data-category="compiler inference">
+          <div class="flagship-left">
+            <span class="flagship-badge">Current flagship</span>
+            <h3>Contraction Weaver</h3>
+            <p>A systems-oriented research direction for hardware-aware computation optimization: tensor contraction planning, intermediate representations, scheduling, kernel generation and measurable execution performance. The project explores the bridge between mathematical workload structure and the hardware that ultimately executes it.</p>
+            <div class="project-stack" style="margin-top:18px;">
+              <span class="tag">Compiler</span><span class="tag">IR</span><span class="tag">Tensor Contractions</span><span class="tag">Kernel Generation</span><span class="tag">Performance</span>
+            </div>
+          </div>
+          <div class="architecture">
+            <div class="flow" aria-label="Contraction Weaver systems flow">
+              <div class="flow-node">Workload</div><div class="flow-arrow">→</div>
+              <div class="flow-node">IR / Plan</div><div class="flow-arrow">→</div>
+              <div class="flow-node">Schedule</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-node">Kernel</div><div class="flow-arrow">→</div>
+              <div class="flow-node">Measure</div>
+            </div>
+          </div>
+        </article>
+
+        <div class="project-grid" id="projectGrid">
+          <article class="project-card glass reveal" data-category="gpu">
+            <div class="project-top"><span class="project-index">P01</span><span class="project-status">GPU</span></div>
+            <h3 class="project-title">KernelForge</h3>
+            <p class="project-tagline">CUDA kernel engineering and GPU-performance exploration.</p>
+            <div class="project-stack"><span class="tag">CUDA</span><span class="tag">C++</span><span class="tag">GPU Architecture</span><span class="tag">Memory Hierarchy</span></div>
+            <p class="project-focus">Focus: tiled computation, execution behavior, memory-aware kernels and hardware-conscious optimization.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="inference">
+            <div class="project-top"><span class="project-index">P02</span><span class="project-status">Runtime</span></div>
+            <h3 class="project-title">RuntimeX</h3>
+            <p class="project-tagline">An AI execution runtime concept connecting compiled workloads to hardware.</p>
+            <div class="project-stack"><span class="tag">C++</span><span class="tag">Runtime Systems</span><span class="tag">Scheduling</span><span class="tag">Memory</span></div>
+            <p class="project-focus">Focus: execution abstractions, scheduling, memory management and performance-sensitive paths.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="inference">
+            <div class="project-top"><span class="project-index">P03</span><span class="project-status">LLM</span></div>
+            <h3 class="project-title">InferX</h3>
+            <p class="project-tagline">LLM inference engine work centered on efficient request execution and KV-cache behavior.</p>
+            <div class="project-stack"><span class="tag">LLM</span><span class="tag">KV Cache</span><span class="tag">C++</span><span class="tag">Inference</span></div>
+            <p class="project-focus">Focus: memory efficiency, request execution and practical inference performance.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="compiler">
+            <div class="project-top"><span class="project-index">P04</span><span class="project-status">Compiler</span></div>
+            <h3 class="project-title">FusionCore</h3>
+            <p class="project-tagline">ML compiler infrastructure exploring MLIR/LLVM transformations for machine-learning workloads.</p>
+            <div class="project-stack"><span class="tag">MLIR</span><span class="tag">LLVM</span><span class="tag">C++</span><span class="tag">Lowering</span></div>
+            <p class="project-focus">Focus: IR design, graph transformations, operator fusion and hardware-aware lowering.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="gpu">
+            <div class="project-top"><span class="project-index">P05</span><span class="project-status">Profiling</span></div>
+            <h3 class="project-title">GPUScope</h3>
+            <p class="project-tagline">GPU profiling and performance-analysis tooling to connect bottlenecks to optimization actions.</p>
+            <div class="project-stack"><span class="tag">CUDA</span><span class="tag">Profiling</span><span class="tag">Performance</span><span class="tag">Observability</span></div>
+            <p class="project-focus">Focus: kernel behavior, GPU utilization, memory bottlenecks and performance feedback loops.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="inference">
+            <div class="project-top"><span class="project-index">P06</span><span class="project-status">Quantization</span></div>
+            <h3 class="project-title">QuantForge</h3>
+            <p class="project-tagline">Lower-precision AI optimization across FP8, INT8 and INT4.</p>
+            <div class="project-stack"><span class="tag">FP8</span><span class="tag">INT8</span><span class="tag">INT4</span><span class="tag">Inference</span></div>
+            <p class="project-focus">Focus: precision/performance trade-offs, memory reduction and efficient inference.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="distributed">
+            <div class="project-top"><span class="project-index">P07</span><span class="project-status">Distributed</span></div>
+            <h3 class="project-title">DistTrain</h3>
+            <p class="project-tagline">Distributed training systems built around communication and scaling behavior.</p>
+            <div class="project-stack"><span class="tag">NCCL</span><span class="tag">FSDP</span><span class="tag">Distributed</span><span class="tag">Scaling</span></div>
+            <p class="project-focus">Focus: communication overhead, parallel execution and multi-accelerator training behavior.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="deployment">
+            <div class="project-top"><span class="project-index">P08</span><span class="project-status">Edge</span></div>
+            <h3 class="project-title">EdgeDeploy</h3>
+            <p class="project-tagline">AI deployment exploration across heterogeneous edge platforms.</p>
+            <div class="project-stack"><span class="tag">Jetson</span><span class="tag">Qualcomm</span><span class="tag">Intel</span><span class="tag">Edge AI</span></div>
+            <p class="project-focus">Focus: hardware-aware deployment, resource constraints and portable inference systems.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="gpu compiler">
+            <div class="project-top"><span class="project-index">P09</span><span class="project-status">Automation</span></div>
+            <h3 class="project-title">AutoKernel</h3>
+            <p class="project-tagline">Automatic CUDA kernel generation at the intersection of compilers and GPU optimization.</p>
+            <div class="project-stack"><span class="tag">CUDA</span><span class="tag">Code Generation</span><span class="tag">Optimization</span><span class="tag">Search</span></div>
+            <p class="project-focus">Focus: automated kernel generation, tuning and hardware-aware execution.</p>
+          </article>
+
+          <article class="project-card glass reveal" data-category="compiler inference deployment">
+            <div class="project-top"><span class="project-index">P10</span><span class="project-status">Platform</span></div>
+            <h3 class="project-title">DeployLens</h3>
+            <p class="project-tagline">An end-to-end AI systems platform concept bringing the portfolio’s layers together.</p>
+            <div class="project-stack"><span class="tag">Compiler</span><span class="tag">Runtime</span><span class="tag">Inference</span><span class="tag">Profiling</span></div>
+            <p class="project-focus">Focus: model → compiler → kernel → runtime → hardware → profiling → optimization.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="skills wrap">
+      <div class="section-head reveal">
+        <div><div class="section-kicker">03 · Engineering stack</div><h2>The layers I’m learning to own.</h2></div>
+        <p class="section-intro">A practical systems stack rather than a generic AI toolkit: fundamentals first, then compilers, accelerators, runtime behavior and measurable performance.</p>
+      </div>
+      <div class="skills-grid">
+        <article class="skill-card glass reveal"><div class="skill-icon">C++</div><h3>Systems Programming</h3><p>C++, algorithms, data structures, operating systems, memory and performance-sensitive implementation.</p></article>
+        <article class="skill-card glass reveal"><div class="skill-icon">IR</div><h3>Compilers</h3><p>Compiler design, intermediate representations, MLIR, LLVM, graph transformation, fusion and lowering.</p></article>
+        <article class="skill-card glass reveal"><div class="skill-icon">GPU</div><h3>Accelerated Computing</h3><p>CUDA, GPU architecture, kernels, memory hierarchy, tiled workloads and accelerator execution.</p></article>
+        <article class="skill-card glass reveal"><div class="skill-icon">AI</div><h3>Inference Systems</h3><p>LLM inference, KV cache, quantization, request execution, latency, throughput, memory and cost.</p></article>
+        <article class="skill-card glass reveal"><div class="skill-icon">NCCL</div><h3>Distributed AI</h3><p>NCCL, FSDP, communication overhead, scaling behavior and multi-accelerator execution.</p></article>
+        <article class="skill-card glass reveal"><div class="skill-icon">OBS</div><h3>Profiling</h3><p>Benchmarking, profiling, bottleneck isolation and optimization feedback grounded in measurements.</p></article>
+        <article class="skill-card glass reveal"><div class="skill-icon">DEP</div><h3>Deployment</h3><p>Edge hardware, runtimes, containerization and adapting AI workloads to heterogeneous platforms.</p></article>
+        <article class="skill-card glass reveal"><div class="skill-icon">LAB</div><h3>Research Mindset</h3><p>Experiment design, reproducibility, architecture notes and turning system hypotheses into benchmarks.</p></article>
+      </div>
+    </section>
+
+    <section id="roadmap" class="roadmap wrap">
+      <div class="section-head reveal">
+        <div><div class="section-kicker">04 · Learning trajectory</div><h2>From fundamentals to AI performance engineering.</h2></div>
+        <p class="section-intro">The learning path reflected by the projects: understand the machine, then the compiler, then the accelerator, then the inference/runtime system.</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item reveal"><span class="timeline-dot"></span><div class="timeline-card glass"><div class="timeline-year">Foundation</div><div class="timeline-title">Algorithms, Data Structures & C++</div><p class="timeline-copy">Build implementation fluency and algorithmic reasoning for systems-level engineering.</p></div></div>
+        <div class="timeline-item reveal"><span class="timeline-dot"></span><div class="timeline-card glass"><div class="timeline-year">Systems</div><div class="timeline-title">Computer Architecture & Operating Systems</div><p class="timeline-copy">Understand memory, execution, processes, concurrency, caching and the machine underneath AI workloads.</p></div></div>
+        <div class="timeline-item reveal"><span class="timeline-dot"></span><div class="timeline-card glass"><div class="timeline-year">Compiler</div><div class="timeline-title">Compiler Design → MLIR / LLVM</div><p class="timeline-copy">Move from classic compiler concepts into ML-focused IRs, lowering, fusion and code generation.</p></div></div>
+        <div class="timeline-item reveal"><span class="timeline-dot"></span><div class="timeline-card glass"><div class="timeline-year">Accelerators</div><div class="timeline-title">CUDA, GPU Architecture & Kernel Optimization</div><p class="timeline-copy">Study how workloads map onto hardware and how kernels, memory and scheduling affect execution.</p></div></div>
+        <div class="timeline-item reveal"><span class="timeline-dot"></span><div class="timeline-card glass"><div class="timeline-year">AI Performance</div><div class="timeline-title">Inference, Quantization, Profiling & Runtime Systems</div><p class="timeline-copy">Bring model serving, memory efficiency, performance measurement and hardware-aware optimization together.</p></div></div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact wrap">
+      <div class="contact-card glass reveal">
+        <div>
+          <div class="section-kicker">05 · Contact</div>
+          <h2 class="contact-title">Let’s build something close to the metal.</h2>
+          <p class="contact-copy">For internships, research collaborations, systems projects or engineering discussions around compilers, inference optimization, GPU computing and AI performance.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;">
+            <a class="btn primary" id="emailButton" href="mailto:your.email@example.com">Email me ↗</a>
+            <a class="btn ghost" id="linkedinButton" href="#" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+          </div>
+        </div>
+        <div class="contact-grid">
+          <a class="contact-item" id="emailItem" href="mailto:your.email@example.com"><span class="ico">@</span><span><small>Email</small><strong id="emailText">your.email@example.com</strong></span></a>
+          <a class="contact-item" id="phoneItem" href="tel:+910000000000"><span class="ico">☎</span><span><small>Phone</small><strong id="phoneText">+91 XXXXX XXXXX</strong></span></a>
+          <a class="contact-item" id="linkedinItem" href="#" target="_blank" rel="noreferrer"><span class="ico">in</span><span><small>LinkedIn</small><strong id="linkedinText">linkedin.com/in/your-handle</strong></span></a>
+          <a class="contact-item" id="xItem" href="#" target="_blank" rel="noreferrer"><span class="ico">𝕏</span><span><small>X / Twitter</small><strong id="xText">x.com/your-handle</strong></span></a>
+          <a class="contact-item" id="githubItem" href="#" target="_blank" rel="noreferrer"><span class="ico">GH</span><span><small>GitHub</small><strong id="githubText">github.com/your-handle</strong></span></a>
+          <div class="contact-item"><span class="ico">⌂</span><span><small>Based in</small><strong>India · available for systems / AI engineering work</strong></span></div>
+          <div class="edit-note">Edit the PROFILE object near the bottom of this HTML file to add your real photo URL, email, phone, LinkedIn, X and GitHub links.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <div class="footer-inner glass">
+      <span>© <span id="year"></span> Arun Kumar K</span>
+      <span>AI Systems · ML Compilers · Inference Optimization · GPU Computing</span>
+    </div>
+  </footer>
+
+  <script>
+    /* =============================================================
+       PERSONAL DETAILS — EDIT ONLY THIS OBJECT
+       Replace these values with your real details before publishing.
+       ============================================================= */
+    const PROFILE = {
+      photoUrl: "https://raw.githubusercontent.com/ThronAxis/arunkumark229/main/Arunkumar_profile.jpeg",
+      email: "arunkathir229@gmail.com",
+      phone: "+91 6380856657",
+      linkedin: "https://www.linkedin.com/in/arunkumark229",
+      x: "https://x.com/arunkumark229",
+      github: "https://github.com/ThronAxis"
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const safeUrl = (value, fallback = "#") => value && /^https?:\/\//i.test(value) ? value : fallback;
+
+    // Contact / social content
+    $("emailText").textContent = PROFILE.email;
+    $("emailButton").href = `mailto:${PROFILE.email}`;
+    $("emailItem").href = `mailto:${PROFILE.email}`;
+    $("phoneText").textContent = PROFILE.phone;
+    $("phoneItem").href = `tel:${PROFILE.phone.replace(/[^+\d]/g, "")}`;
+    $("linkedinText").textContent = PROFILE.linkedin.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    $("linkedinItem").href = safeUrl(PROFILE.linkedin);
+    $("linkedinButton").href = safeUrl(PROFILE.linkedin);
+    $("linkedinLink").href = safeUrl(PROFILE.linkedin);
+    $("xText").textContent = PROFILE.x.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    $("xItem").href = safeUrl(PROFILE.x);
+    $("xLink").href = safeUrl(PROFILE.x);
+    $("githubText").textContent = PROFILE.github.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    $("githubItem").href = safeUrl(PROFILE.github);
+    $("githubLink").href = safeUrl(PROFILE.github);
+
+    // Profile photo with automatic fallback
+    if (PROFILE.photoUrl) {
+      const img = document.createElement("img");
+      img.className = "avatar";
+      img.alt = "Arun Kumar K";
+      img.src = PROFILE.photoUrl;
+      img.onerror = () => { img.replaceWith(makeFallback()); };
+      $("avatarWrap").replaceWith(img);
+
+      const heroImage = $("heroProfileImage");
+      heroImage.src = PROFILE.photoUrl;
+      heroImage.onerror = () => {
+        heroImage.removeAttribute("src");
+        heroImage.alt = "Arun Kumar K";
+        heroImage.style.display = "none";
+        heroImage.parentElement.classList.add("avatar-fallback");
+        heroImage.parentElement.innerHTML += "<span style=\"position:absolute;inset:0;display:grid;place-items:center;color:#5a6a82;font-weight:850;font-size:25px;\">AK</span>";
+      };
+    }
+    function makeFallback() {
+      const div = document.createElement("div");
+      div.className = "avatar avatar-fallback";
+      div.innerHTML = "<span>AK</span>";
+      return div;
+    }
+
+    // Project filtering
+    const filterButtons = [...document.querySelectorAll(".filter-btn")];
+    const cards = [...document.querySelectorAll("#projectGrid .project-card")];
+    filterButtons.forEach(btn => btn.addEventListener("click", () => {
+      filterButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const filter = btn.dataset.filter;
+      cards.forEach(card => {
+        const cats = card.dataset.category.split(" ");
+        card.style.display = filter === "all" || cats.includes(filter) ? "flex" : "none";
+      });
+    }));
+
+    // Scroll reveal
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, { threshold: .12 });
+    document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+    // Subtle 3D parallax in the hero
+    const visual = $("heroVisual");
+    const scene = $("scene3d");
+    const glow = $("cursorGlow");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduceMotion) {
+      window.addEventListener("pointermove", (e) => {
+        const x = (e.clientX / window.innerWidth - .5) * 2;
+        const y = (e.clientY / window.innerHeight - .5) * 2;
+        scene.style.transform = `rotateX(${(-y * 3).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg)`;
+        glow.style.left = e.clientX + "px";
+        glow.style.top = e.clientY + "px";
+        glow.style.opacity = .8;
+      });
+      window.addEventListener("pointerleave", () => glow.style.opacity = "0");
+    }
+
+    // Card tilt — deliberately restrained for a smooth effect
+    if (!reduceMotion && window.matchMedia("(pointer:fine)").matches) {
+      document.querySelectorAll(".project-card").forEach(card => {
+        card.addEventListener("pointermove", (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - .5;
+          const y = (e.clientY - r.top) / r.height - .5;
+          card.style.transform = `perspective(900px) rotateX(${(-y * 2).toFixed(2)}deg) rotateY(${(x * 2.5).toFixed(2)}deg) translateY(-6px)`;
+        });
+        card.addEventListener("pointerleave", () => card.style.transform = "");
+      });
+    }
+
+    $("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
